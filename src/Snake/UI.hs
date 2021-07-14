@@ -25,9 +25,7 @@ drawUi game = Picture
 
 drawGameOver :: Game -> Image
 drawGameOver Game { state = GameOver }
-    = translateCX (gridW * blockW)
-    $ translateY (gridH `div` 2)
-      txt
+    = translateC (gridW * blockW) gridH txt
     where
         txt = string defAttr ("  GAME" ++ spc ++ "OVER  ")
         spc = if even gridW then " " else "  " -- For better centering
@@ -59,4 +57,10 @@ block :: Char -> String
 block = replicate blockW
 
 translateCX :: Int -> Image -> Image
-translateCX n img = translateX (n `div` 2 - imageWidth img `div` 2) img
+translateCX n img = translateX ((n - imageWidth img) `div` 2) img
+
+translateCY :: Int -> Image -> Image
+translateCY n img = translateY ((n - imageHeight img) `div` 2) img
+
+translateC :: Int -> Int -> Image -> Image
+translateC x y = translateCX x . translateCY y
