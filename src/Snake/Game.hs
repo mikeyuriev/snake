@@ -29,6 +29,7 @@ data GameState
 
 data Game = Game
     { score      :: Int
+    , highScore  :: Int
     , state      :: GameState
     , snake      :: Snake
     , food       :: Food
@@ -46,13 +47,14 @@ initGame gen = resetGame $ map toPt rnd
 
 -- | Reinitialize Game
 newGame :: Game -> Game
-newGame Game { foods = foods' }
-    = resetGame foods'
+newGame Game { score = score', highScore = highScore', foods = foods' }
+    = (resetGame foods') { highScore = max score' highScore' }
 
 -- | Produce game init values
 resetGame :: [Food] -> Game
 resetGame foods' = Game
     { score      = 0
+    , highScore  = 0
     , state      = GamePlay
     , snake      = s
     , food       = f
