@@ -14,16 +14,18 @@ import Snake.Types
 
 -- | Main ui
 drawUi :: Game -> Picture
-drawUi game
-    = Picture NoCursor [gameOver, grid, score'] (Background ' ' defAttr)
+drawUi game = Picture
+    NoCursor
+    [gameOver, grid <|> translateX 2 score']
+    (Background ' ' defAttr)
     where
-        score'   = translateX (imageWidth grid + blockW) (drawScore game)
+        score'   = drawScore game
         grid     = drawGrid game
         gameOver = drawGameOver game
 
 drawGameOver :: Game -> Image
 drawGameOver Game { state = GameOver }
-    = translateX (gridW * blockW `div` 2 - imageWidth txt `div` 2) -- Center text
+    = translateCX (gridW * blockW)
     $ translateY (gridH `div` 2)
       txt
     where
@@ -55,3 +57,6 @@ drawEmpty = string (defAttr `withBackColor` brightBlack) (block ' ')
 
 block :: Char -> String
 block = replicate blockW
+
+translateCX :: Int -> Image -> Image
+translateCX n img = translateX (n `div` 2 - imageWidth img `div` 2) img
