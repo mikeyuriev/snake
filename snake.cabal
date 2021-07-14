@@ -1,0 +1,58 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.34.4.
+--
+-- see: https://github.com/sol/hpack
+
+name:           snake
+version:        0.1.0.0
+synopsis:       Snake game
+description:    Please see the README on GitHub at <https://github.com/mikeyuriev/snake#readme>
+category:       Game
+homepage:       https://github.com/mikeyuriev/snake#readme
+bug-reports:    https://github.com/mikeyuriev/snake/issues
+author:         Mike Yuriev
+maintainer:     mikeyuriev@gmail.com
+copyright:      2021 Mike Yuriev
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/mikeyuriev/snake
+
+library
+  exposed-modules:
+      Snake
+      Snake.Cfg
+      Snake.Evt
+      Snake.Game
+      Snake.Types
+      Snake.UI
+  other-modules:
+      Paths_snake
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , random >=1.2 && <2
+    , vty >=5.3 && <6
+  default-language: Haskell2010
+
+executable snake
+  main-is: Main.hs
+  other-modules:
+      Paths_snake
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , random >=1.2 && <2
+    , snake
+    , vty >=5.3 && <6
+  default-language: Haskell2010

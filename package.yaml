@@ -1,0 +1,39 @@
+name:                snake
+version:             0.1.0.0
+github:              "mikeyuriev/snake"
+license:             BSD3
+author:              "Mike Yuriev"
+maintainer:          "mikeyuriev@gmail.com"
+copyright:           "2021 Mike Yuriev"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+synopsis:            Snake game
+category:            Game
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/mikeyuriev/snake#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- random >= 1.2 && < 2
+- vty >= 5.3 && < 6
+
+library:
+  source-dirs: src
+
+executables:
+  snake:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - snake
