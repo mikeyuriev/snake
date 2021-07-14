@@ -42,7 +42,9 @@ data Game = Game
 initGame :: StdGen -> Game
 initGame gen = resetGame $ map toPt rnd
     where
-        rnd    = randomRs (0, gridW * gridH - 1) gen
+        rnd :: [Int]
+        rnd = randomRs (0, gridW * gridH - 1) gen
+        toPt :: Int -> Point
         toPt n = Point (n `mod` gridW) (n `div` gridW)
 
 -- | Reinitialize Game
@@ -63,7 +65,9 @@ resetGame foods' = Game
     , directions = []
     }
     where
-        s      = [Point (gridW `div` 2) (gridH `div` 2)] -- Center snake
+        s :: Snake
+        s = [Point (gridW `div` 2) (gridH `div` 2)] -- Center snake
+        f :: Point; fs :: [Point]
         (f:fs) = dropWhile (`elem` s) foods' -- Skip not suitable points
 
 -- | Push direction to queue
@@ -74,6 +78,7 @@ pushDirection dir game@Game { direction = direction', directions = directions' }
     | otherwise
         = game
     where
+        lastDir :: Direction
         lastDir = if null directions' then direction' else last directions'
 
 -- | Pop next direction from queue send it to step'
@@ -92,12 +97,12 @@ step' game@Game
     | ate       = nextFood $ game { score = score' + 1, snake = p:snake' }
     | otherwise = game { snake = p:init snake' }
     where
-        p@(Point x y)
-            = shiftPoint direction' (head snake')
-        gameOver
-            = x < 0 || x >= gridW || y < 0 || y >= gridH || p `elem` snake'
-        ate
-            = p == food'
+        p :: Point; x, y :: Int
+        p@(Point x y) = shiftPoint direction' (head snake')
+        gameOver :: Bool
+        gameOver = x < 0 || x >= gridW || y < 0 || y >= gridH || p `elem` snake'
+        ate :: Bool
+        ate = p == food'
 
 -- | Consume direction from queue
 nextDirection :: Game -> Game
@@ -112,4 +117,5 @@ nextFood game@Game { snake = snake', foods = foods' }
     | length snake' == (gridW * gridH) = newGame game -- if can't produce food
     | otherwise                        = game { food = f, foods = fs }
     where
+        f :: Point; fs :: [Point]
         (f:fs) = dropWhile (`elem` snake') foods'

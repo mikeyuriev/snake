@@ -19,6 +19,7 @@ drawUi game = Picture
     [gameOver, grid <|> translateX 2 score']
     (Background ' ' defAttr)
     where
+        score', grid, gameOver :: Image
         score'   = drawScore game
         grid     = drawGrid game
         gameOver = drawGameOver game
@@ -27,9 +28,11 @@ drawGameOver :: Game -> Image
 drawGameOver Game { state = GameOver }
     = translateC (gridW * blockW) gridH txt
     where
-        txt = string (defAttr `withForeColor` brightWhite)
-                     ("  GAME" ++ spc ++ "OVER  ")
+        txt :: Image
+        txt = string (defAttr `withForeColor` brightWhite) ("  GAME" ++ spc ++ "OVER  ")
+        spc :: String
         spc = if even gridW then " " else "  " -- For better centering
+
 drawGameOver _
     = emptyImage
 
@@ -53,6 +56,7 @@ drawScore Game { score = score', highScore = highScore' } =
     <->
     string (defAttr `withForeColor` brightWhite) ("High Score: " ++ show highScore')
     where
+        scoreFc :: Color
         scoreFc = if score' > highScore' then brightYellow else brightWhite
 
 drawHead, drawSnake, drawFood, drawEmpty :: Image
