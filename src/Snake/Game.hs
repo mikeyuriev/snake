@@ -5,6 +5,7 @@ module Snake.Game
     , Game (..)
     , initGame
     , newGame
+    , pushDirection
     , step
     ) where
 
@@ -13,6 +14,7 @@ import System.Random
 import Snake.Cfg
     ( gridW
     , gridH
+    , maxDirQueue
     )
 import Snake.Types
 
@@ -25,13 +27,14 @@ data GameState
     deriving Eq
 
 data Game = Game
-    { score     :: Int
-    , quit      :: Bool
-    , state     :: GameState
-    , snake     :: Snake
-    , food      :: Food
-    , foods     :: [Food]    -- ^ Infinity list of foods
-    , direction :: Direction
+    { score      :: Int
+    , quit       :: Bool
+    , state      :: GameState
+    , snake      :: Snake
+    , food       :: Food
+    , foods      :: [Food]      -- ^ Infinity list of foods
+    , direction  :: Direction
+    , directions :: [Direction] -- ^ Queue of directions
     }
 
 -- | Initialize Game
@@ -49,21 +52,34 @@ newGame Game { foods = foods' }
 -- | Produce game init values
 resetGame :: [Food] -> Game
 resetGame foods' = Game
-    { score     = 0
-    , quit      = False
-    , state     = GamePlay
-    , snake     = s
-    , food      = f
-    , foods     = fs
-    , direction = North
+    { score      = 0
+    , quit       = False
+    , state      = GamePlay
+    , snake      = s
+    , food       = f
+    , foods      = fs
+    , direction  = North
+    , directions = []
     }
     where
         s      = [Point (gridW `div` 2) (gridH `div` 2)] -- Center snake
         (f:fs) = dropWhile (`elem` s) foods' -- Skip not suitable points
 
--- | Shift snake (and maybe grow him), eat food, update score and game over status
+-- | Push direction to queue
+pushDirection :: Direction -> Game ->  Game
+pushDirection dir game@Game { directions = directions' }
+    | length directions' < maxDirQueue
+        = game { directions = directions' ++ [dir] }
+    | otherwise
+        = game
+
+-- | Pop next direction from queue send it to step'
 step :: Game -> Game
-step game@Game
+step = step' . nextDirection
+
+-- | Shift snake (and maybe grow him), eat food, update score and game over status
+step' :: Game -> Game
+step' game@Game
     { score = score'
     , snake = snake'
     , food = food'
@@ -79,6 +95,13 @@ step game@Game
             = x < 0 || x >= gridW || y < 0 || y >= gridH || p `elem` snake'
         ate
             = p == food'
+
+-- | Consume direction from queue
+nextDirection :: Game -> Game
+nextDirection game@Game { directions = [] }
+    = game
+nextDirection game@Game { directions = (d:ds) }
+    = game { direction = d, directions = ds }
 
 -- | Produce new food
 nextFood :: Game -> Game

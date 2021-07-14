@@ -9,8 +9,8 @@ import Snake.Types
 dispatchEvt :: Evt -> Game -> Game
 dispatchEvt EvtTick game@Game { state = GamePlay }
     = step game
-dispatchEvt (EvtDir dir) game@Game { state = GamePlay }
-    = game { direction = dir }
+dispatchEvt (EvtDir dir) game
+    = pushDirection dir game
 dispatchEvt EvtOtherKey game@Game { state = GameOver }
     = newGame game
 dispatchEvt EvtQuit game
