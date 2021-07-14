@@ -68,11 +68,13 @@ resetGame foods' = Game
 
 -- | Push direction to queue
 pushDirection :: Direction -> Game ->  Game
-pushDirection dir game@Game { directions = directions' }
-    | length directions' < maxDirQueue
+pushDirection dir game@Game { direction = direction', directions = directions' }
+    | length directions' < maxDirQueue && dir /= lastDir
         = game { directions = directions' ++ [dir] }
     | otherwise
         = game
+    where
+        lastDir = if null directions' then direction' else last directions'
 
 -- | Pop next direction from queue send it to step'
 step :: Game -> Game
