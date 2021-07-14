@@ -1,5 +1,6 @@
 module Snake
-    ( Game (..)
+    ( GameState (..)
+    , Game (..)
     , Evt (..)
     , initGame
     , dispatchEvt

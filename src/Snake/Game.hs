@@ -24,11 +24,11 @@ type Food = Point
 data GameState
     = GamePlay
     | GameOver
+    | GameQuit
     deriving Eq
 
 data Game = Game
     { score      :: Int
-    , quit       :: Bool
     , state      :: GameState
     , snake      :: Snake
     , food       :: Food
@@ -53,7 +53,6 @@ newGame Game { foods = foods' }
 resetGame :: [Food] -> Game
 resetGame foods' = Game
     { score      = 0
-    , quit       = False
     , state      = GamePlay
     , snake      = s
     , food       = f

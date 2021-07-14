@@ -14,6 +14,6 @@ dispatchEvt (EvtDir dir) game
 dispatchEvt EvtOtherKey game@Game { state = GameOver }
     = newGame game
 dispatchEvt EvtQuit game
-    = game { quit = True }
+    = game { state = GameQuit }
 dispatchEvt _ game
     = game
