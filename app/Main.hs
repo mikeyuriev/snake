@@ -4,6 +4,7 @@ import Control.Concurrent
 import Control.Monad
 import Data.Functor
 import Graphics.Vty
+import System.Random
 
 import Snake
 import Snake.Cfg
@@ -46,6 +47,7 @@ main = do
     cfg <- standardIOConfig
     vty <- mkVty cfg
     tick <- newEmptyMVar
+    gen <- getStdGen
     void $ forkIO $ tickProducer tickDelay tick
-    loop vty tick initGame
+    loop vty tick $ initGame gen
     shutdown vty

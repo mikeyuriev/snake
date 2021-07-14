@@ -38,10 +38,10 @@ data Game = Game
     }
 
 -- | Initialize Game
-initGame :: Game
-initGame = resetGame $ map toPt rnd
+initGame :: StdGen -> Game
+initGame gen = resetGame $ map toPt rnd
     where
-        rnd    = randomRs (0, gridW * gridH - 1) $ mkStdGen 0
+        rnd    = randomRs (0, gridW * gridH - 1) gen
         toPt n = Point (n `mod` gridW) (n `div` gridW)
 
 -- | Reinitialize Game
