@@ -37,7 +37,7 @@ dispatchVtyEvent vty game = do
 -- | Main game loop
 loop :: Vty -> MVar Tick -> Game -> IO ()
 loop _   _    Game { state = GameQuit } = return ()
-loop vty tick game                 = do
+loop vty tick game = do
     update vty $ drawUi game
     threadDelay loopDelay
     tickHandler tick game >>= dispatchVtyEvent vty >>= loop vty tick

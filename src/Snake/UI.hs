@@ -27,7 +27,7 @@ drawGameOver :: Game -> Image
 drawGameOver Game { state = GameOver }
     = translateC (gridW * blockW) gridH txt
     where
-        txt = string (defAttr `withForeColor` white)
+        txt = string (defAttr `withForeColor` brightWhite)
                      ("  GAME" ++ spc ++ "OVER  ")
         spc = if even gridW then " " else "  " -- For better centering
 drawGameOver _
@@ -42,19 +42,21 @@ drawGrid Game { snake = snake', food = food' }
 
         cell :: Point -> Image
         cell p
-            | p `elem` snake' = drawSnake
-            | p == food'      = drawFood
-            | otherwise       = drawEmpty
+            | p == head snake' = drawHead
+            | p `elem` snake'  = drawSnake
+            | p == food'       = drawFood
+            | otherwise        = drawEmpty
 
 drawScore :: Game -> Image
 drawScore Game { score = score', highScore = highScore' } =
     string (defAttr `withForeColor` scoreFc) ("Score:      " ++ show score')
     <->
-    string (defAttr `withForeColor` white) ("High Score: " ++ show highScore')
+    string (defAttr `withForeColor` brightWhite) ("High Score: " ++ show highScore')
     where
-        scoreFc = if score' > highScore' then brightYellow else white
+        scoreFc = if score' > highScore' then brightYellow else brightWhite
 
-drawSnake, drawFood, drawEmpty :: Image
+drawHead, drawSnake, drawFood, drawEmpty :: Image
+drawHead  = string (defAttr `withBackColor` brightBlue) (block ' ')
 drawSnake = string (defAttr `withBackColor` blue) (block ' ')
 drawFood  = string (defAttr `withBackColor` red) (block ' ')
 drawEmpty = string (defAttr `withBackColor` brightBlack) (block ' ')
